@@ -17,7 +17,7 @@ import lombok.ToString;
 @Table(name = "Supplier")
 @Entity
 public class Supplier {
-	
+	//
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Supplier_ID")
@@ -38,5 +38,5 @@ public class Supplier {
 		this.supplier_name = supplier_name;
 	}
 	
-	
+
 }
