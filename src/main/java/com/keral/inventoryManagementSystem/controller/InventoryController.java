@@ -32,5 +32,23 @@ public class InventoryController {
 
 	// other
 
+	@GetMapping("/products/{id}")
+	public Product getMyProduct(@PathVariable("id") long id) {
+		Product p = inService.productById(id);
+		Product psave = inService.save(p);
+		return psave;
+	}
+
+	@DeleteMapping("/products/{id}")
+	public String deleteById(@PathVariable("id") long id) {
+		inService.deleteById(id);
+		return "Product is succesfully deleted";
+
+	}
+	
+	public String updateProduct(@PathVariable("id") long id , Product product){
+		inService.updateProduct(id, product);
+		return "Product is updated succesfully";
+	}
 
 }
