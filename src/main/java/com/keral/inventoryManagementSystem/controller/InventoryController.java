@@ -52,7 +52,6 @@ public class InventoryController {
 	public String deleteById(@PathVariable("id") long id) {
 		inService.deleteById(id);
 		return "Product is succesfully deleted";
-
 	}
 	@PutMapping("/products/{id}")
 	public String updateProduct(@PathVariable("id") long id , Product product){
