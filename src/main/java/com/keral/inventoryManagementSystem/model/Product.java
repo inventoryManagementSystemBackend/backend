@@ -18,7 +18,7 @@ public class Product {
 	private long product_id;
 
 	@Column(name = "Product_Name")
-	private String product_name;
+	private String name;
 
 	@Column(name = "Category")
 	private String category;
