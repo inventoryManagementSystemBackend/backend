@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.keral.inventoryManagementSystem.model.Sale;
 
 @Repository
-public interface SalesRepo extends JpaRepository<Sale, Long> {
+public interface OrderRepo extends JpaRepository<Sale, Long> {
 
 }

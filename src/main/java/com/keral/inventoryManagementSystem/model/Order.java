@@ -10,10 +10,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @Table(name = "Orders")
 @Entity
+@Getter
+@Setter
 public class Order {
 
 	@Id
@@ -31,29 +35,8 @@ public class Order {
 	@JoinColumn(name = "product_id" , nullable = false)
 	private Product product;
 
-	public String getOrder_id() {
-		return Order_id;
-	}
 
-	public void setOrder_id(String order_id) {
-		Order_id = order_id;
-	}
 
-	public Supplier getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
 	
 	
 

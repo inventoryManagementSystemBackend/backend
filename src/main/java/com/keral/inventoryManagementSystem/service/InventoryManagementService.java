@@ -1,13 +1,12 @@
 package com.keral.inventoryManagementSystem.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.keral.inventoryManagementSystem.model.Product;
+import com.keral.inventoryManagementSystem.model.Product; // Doğru paket adını kullanın
 import com.keral.inventoryManagementSystem.repository.InventoryRepo;
 
 @Service
@@ -19,38 +18,21 @@ public class InventoryManagementService {
 	public InventoryManagementService(InventoryRepo repo) {
 		this.repo = repo;
 	}
-	
-
-    public List<Product> saveProducts(List<Product> products) {
-        return repo.saveAll(products);
-    }
-
 
 	public Product save(Product p) {
 		return repo.save(p);
 	}
 
 	public List<Product> getAllProducts() {
-		return repo.findAll(); 
+		return repo.findAll();
 	}
-	
-	public Product productById(Long id) {
-		return repo.findById(id).get();
-		
+
+	public Product getProductById(Long id) {
+		Optional<Product> productOptional = repo.findById(id);
+		return productOptional.orElse(null);
 	}
-	
-	public void deleteById(long id) {
+
+	public void deleteProduct(Long id) {
 		repo.deleteById(id);
 	}
-	
-	 public Product updateProduct(Long id, Product product) {
-	        Optional<Product> existingUser = repo.findById(id);
-	        if (existingUser.isPresent()) {
-	            product.setProduct_id(id);
-	            return repo.save(product);
-	        }
-	        return null;
-	    }
-
-	 
 }
