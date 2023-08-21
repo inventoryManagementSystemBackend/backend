@@ -1,53 +1,34 @@
 package com.keral.inventoryManagementSystem.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.*;
 
-import lombok.Data;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@Table(name = "User")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "Id")
-	private long id;
-	@Column(name = " User_ID")
-	private String user_id;
-	@Column(name = "First_Name")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false)
 	private String firstName;
-	@Column(name = "Last_Name")
+
+	@Column(nullable = false)
 	private String lastName;
-	@Column(name = "Email_ID")
+
+	@Column(nullable = false, unique = true)
 	private String email;
-	public String getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
-	public String getUser_name() {
-		return user_name;
-	}
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
-	}
-	public String getRoles() {
-		return roles;
-	}
-	public void setRoles(String roles) {
-		this.roles = roles;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
+	@Column(nullable = false)
+	private String password;
+
+
 }

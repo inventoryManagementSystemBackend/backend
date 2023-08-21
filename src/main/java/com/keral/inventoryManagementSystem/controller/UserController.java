@@ -1,69 +1,79 @@
 package com.keral.inventoryManagementSystem.controller;
 
+import com.keral.inventoryManagementSystem.dto.UserDto;
+import com.keral.inventoryManagementSystem.model.User;
+import com.keral.inventoryManagementSystem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.keral.inventoryManagementSystem.model.User;
-import com.keral.inventoryManagementSystem.service.UserManagementService;
-
-@RestController
-@RequestMapping("/users")
+@Controller
+@RequestMapping("/UserApi")
 public class UserController {
 
-    private final UserManagementService userService;
+    private final UserService userService;
 
-    // firstcommit
     @Autowired
-    public UserController(UserManagementService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        UserDto user = new UserDto();
+        model.addAttribute("user", user);
+        return "register"; // "register.html" olarak düzeltilmiş
+    }
+
+    @PostMapping("/register/save")
+    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
+                               BindingResult result,
+                               Model model) {
+        User existing = userService.findByEmail(userDto.getEmail());
+        if (existing != null) {
+            result.rejectValue("email", null, "There is already an account registered with that email");
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("user", userDto);
+            return "register";
+        }
+
+        userService.saveUser(userDto);
+        return "redirect:/UserApi/register?success";
+    }
+
+    @GetMapping("/users")
+    public String listRegisteredUsers(Model model) {
+        List<UserDto> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "users";
+    }
+
     @PostMapping("/user")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
+        User savedUser = userService.save(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable long userId) {
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(user);
+    @GetMapping("/index")
+    public String redirectToIndex() {
+        return "index";
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
-    @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable long userId, @RequestBody User user) {
-        User updatedUser = userService.updateUser(userId, user);
-        if (updatedUser == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedUser);
-    }
-
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable long userId) {
-        boolean deleted = userService.deleteUser(userId);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok("Deleted");
+    @GetMapping("/logout")
+    public String logoutSuccess() {
+        return "redirect:/UserApi/index";
     }
 }
