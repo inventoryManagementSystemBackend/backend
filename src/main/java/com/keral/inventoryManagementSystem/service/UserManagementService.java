@@ -1,53 +1,32 @@
 package com.keral.inventoryManagementSystem.service;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.keral.inventoryManagementSystem.model.User;
-import com.keral.inventoryManagementSystem.repository.UserRepository;
+import com.keral.inventoryManagementSystem.repository.UserRepo;
 
 @Service
 public class UserManagementService {
 
-    private final UserRepository userRepository;
+
+    public UserRepo userrepo;
 
     @Autowired
-    public UserManagementService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserManagementService(UserRepo userrepo) {
+        super();
+        this.userrepo = userrepo;
+
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public User save(User u) {
+
+        System.out.println(u.getId());
+
+        return userrepo.save(u);
     }
 
-    public User getUserById(long userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 
-    public User updateUser(long userId, User newUser) {
-        User existingUser = userRepository.findById(userId).orElse(null);
-        if (existingUser != null) {
-            // Update user properties as needed
-            existingUser.setUser_id(newUser.getUser_id());
-            existingUser.setFirstName(newUser.getFirstName());
-            existingUser.setLastName(newUser.getLastName());
-            existingUser.setEmail(newUser.getEmail());
-            return userRepository.save(existingUser);
-        }
-        return null;
-    }
 
-    public boolean deleteUser(long userId) {
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
-            return true;
-        }
-        return false;
-    }
-
-	
+}
