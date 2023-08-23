@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Registration and Login System</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/UserApi/register}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/UserApi/login}">Login</a>
+                </li>
+                <li class="nav-item" th:if="${#authentication.authenticated}">
+                    <a class="nav-link active" aria-current="page" th:href="@{/UserApi/logout}">Logout</a>
+                </li>
+                <li class="nav-item" th:if="${#authentication.authenticated}">
+                    <a class="nav-link active" aria-current="page" th:href="@{/sales}">Sales</a>
+
+                </li>
+
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+<div class="card">
+    <div th:if="${message}" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+</div>
+<script>
+    setTimeout(function() {
+        var successMessage = document.querySelector('.alert-success');
+        if (successMessage) {
+            successMessage.style.display = 'none';
+        }
+    }, 2000);
+</script>
+
+<div class="container mt-4">
+    <h1 class="text-center mt-4">Product List</h1>
+    <span> <a href="/reports/generate">Take Report</a></span>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Product List</h2>
+        <button id="add-button" class="btn btn-primary">Add</button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.category}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td th:text="${product.price}"></td>
+            <td><a th:href="@{/inventory/update/{id}(id=${product.productId})}">Update</a></td>
+            <td><a th:href="@{/inventory/delete/{id}(id=${product.productId})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- update.html-forms ve add-form içindeki input alanlarını düzeltin -->
+
+
+    <div id="add-form" style="display: none;">
+        <form id="product-form" th:action="@{/inventory/save}" method="post">
+            <label for="newProductName">Product Name</label>
+            <input type="text" id="newProductName" name="productName" class="form-control" required>
+
+            <label for="newCategory">Category</label>
+            <input type="text" id="newCategory" name="category" class="form-control" required>
+
+            <label for="newQuantity">Quantity</label>
+            <input type="number" id="newQuantity" name="quantity" class="form-control" required>
+
+            <label for="newPrice">Price</label>
+            <input type="number" id="newPrice" name="price" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const addButton = document.getElementById("add-button");
+            const addForm = document.getElementById("add-form");
+
+            addButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                addForm.style.display = "block";
+            });
+        });
+
+
+</script>
+</body>
+</html>
